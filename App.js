@@ -1,34 +1,60 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Animated, Dimensions, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Animated, Dimensions} from 'react-native';
 import {ListItem, Button} from 'react-native-elements';
+import Swiper from 'react-native-swiper';
 import Swipeout from 'react-native-swipeout';
-require('datejs');
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+require('datejs');
 
 export default class App extends Component {
     constructor() {
         super();
         this.state = {
-            list : [
-                {
-                    name : "TODO",
-                    priority : 1,
-                },
-                {
-                    name: "IMPORTANT",
-                    priority : 2,
-                },
-                {
-                    name:"Hello",
-                    priority: 3,
-                },
-            ],
+            todo: {
+                categories: [
+                    {
+                        title: "School",
+                        subtitle: "Homework, Tests, Assignments",
+                        css: styles.category,
+                    },
+                    {
+                        title: "Shopping List",
+                        subtitle: "",
+                        css: styles.category,
+                    },
+                    {
+                        title: "Lifestyle",
+                        subtitle: "",
+                        css: styles.category,
+                    }
+                ],
+                list : [
+                    {
+                        name : "TODO",
+                        priority : 1,
+                        category: 2,
+                    },
+                    {
+                        name: "IMPORTANT",
+                        priority : 2,
+                        category: 1,
+                    },
+                    {
+                        name:"Hello",
+                        priority: 3,
+                        category: 1,
+                    },
+                ],
+                curList: [],
+                currentCategory: 0,
+            },
+
             placeholder : "Input Task Here",
             inputVisible: false,
-
         }
+
+        this.state.todo.curList = this.state.todo.list.filter(el => el.category === 0)
+
         this.deleteTask = this.deleteTask.bind(this);
         this.addTask = this.addTask.bind(this);
     }
@@ -36,25 +62,48 @@ export default class App extends Component {
     addTask(task) {
         console.log("Add Task Parent");
         console.log(task);
-        let list = this.state.list;
+        let list = this.state.todo.list;
         let newList = [task].concat(list);
         console.log(newList);
-        this.setState({list: newList});
+        this.setState(({todo}) =>
+            ({todo: {
+                ...todo,
+                list: newList,
+                curList: newList.filter(el => el.category === this.state.todo.currentCategory)
+            }})
+        );
     }
 
     deleteTask(id) {
-        console.log(id);
-        //let list = this.state.list;
-        //list.splice(id, 1);
-        //this.setState({list: list});
-        this.setState(prevState => ({
-            list: prevState.list.filter(el => el !== id)
-        }));
+        console.log("DELETING " + id);
+        let newList = this.state.todo.list.filter(el => el !== id);
+
+        this.setState(({todo}) =>
+            ({todo: {
+                    ...todo,
+                    list: newList,
+                    curList: newList.filter(el => el.category === this.state.todo.currentCategory)
+                }})
+        );
     }
 
     changeInputVisible() {
         console.log("hello"+this.state.inputVisible);
         this.setState({inputVisible: !this.state.inputVisible});
+    }
+
+    changeCategoryView(index) {
+        console.log(index);
+        let newCurList;
+        newCurList = this.state.todo.list.filter(el => el.category === index);
+
+        this.setState(({todo}) =>
+            ({todo: {
+                    ...todo,
+                    curList: newCurList,
+                    currentCategory: index,
+                }})
+        );
     }
 
     render() {
@@ -66,7 +115,12 @@ export default class App extends Component {
         return (
             <View style={styles.container}>
 
-                <View style={{height:60, width: SCREEN_WIDTH, marginTop: 20}}>
+                <Categories
+                    changeCategoryView = {this.changeCategoryView.bind(this)}
+                    categories = {this.state.todo.categories}
+
+                />
+                {/*<View style={{height:60, width: SCREEN_WIDTH, marginTop: 20}}>
                     <ScrollView
                         style={{flex: 1}}
                         horizontal
@@ -81,9 +135,9 @@ export default class App extends Component {
                             </View>
                         </View>
                     </ScrollView>
-                </View>
+                </View>*/}
 
-                <TaskList deleteTask= {this.deleteTask} list = {this.state.list}/>
+                <TaskList deleteTask= {this.deleteTask} list = {this.state.todo.curList}/>
                 <Fade
                     visible = {this.state.inputVisible}
                     style={styles.inputTextStyleFade}
@@ -93,6 +147,32 @@ export default class App extends Component {
                 <AddTaskButton changeInputVisible={this.changeInputVisible.bind(this)}/>
             </View>
         );
+    }
+}
+
+class Categories extends Component {
+    changeCategoryView(index) {
+        this.props.changeCategoryView(index);
+    }
+    render() {
+        return (
+            <Swiper
+                showsButtons
+                onIndexChanged={(index) => this.changeCategoryView(index)}
+                loop={false}
+            >
+                {
+                    this.props.categories.map((item, key) => {
+                        return (
+                            <View style={item.css}>
+                                <Text style={styles.categoryTitle}>{item.title}</Text>
+                            </View>
+                        )
+                    })
+                }
+
+            </Swiper>
+        )
     }
 }
 
@@ -237,6 +317,8 @@ class TaskList extends Component {
 
                         </Swipeout>
                 )}}
+
+                keyExtractor={(item, index) => index.toString()}
             />
         );
     }
@@ -330,7 +412,17 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80
     },
-
+    category: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#9DD6EB'
+    },
+    categoryTitle: {
+        color: '#fff',
+        fontSize: 30,
+        fontWeight: 'bold'
+    }
 });
 
 
