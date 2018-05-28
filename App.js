@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Animated, Dimensions} from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Animated, ImageBackground} from 'react-native';
 import {Button, Avatar} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Swiper from 'react-native-swiper';
@@ -50,6 +50,13 @@ export default class App extends Component {
                 curList: [],
                 currentCategory: 0,
             },
+            bgImages: [
+                './src/assets/images/bg1.jpg',
+                './src/assets/images/bg2.jpg',
+                './src/assets/images/bg3.jpg',
+                './src/assets/images/bg4.jpg',
+                './src/assets/images/bg5.jpg'
+            ],
             fontLoaded : false,
             placeholder : "Input Task Here",
             inputVisible: false,
@@ -171,10 +178,13 @@ class Categories extends Component {
                 loop={false}
             >
                 {
-                    this.props.categories.map((item, key) => {
+                    this.props.categories.map((item, key, index) => {
                         return (
                             <View style={item.css}>
-                                <Text style={styles.categoryTitle}>{item.title}</Text>
+                                <ImageBackground source = {require('./src/assets/images/bg1.jpg')}
+                                                 style = {{flex:1, height:'100%', width:'100%', alignItems: 'center', justifyContent: 'center'}}>
+                                    <Text style={styles.categoryTitle}>{item.title}</Text>
+                                </ImageBackground>
                             </View>
                         )
                     })
@@ -289,8 +299,8 @@ class TaskList extends Component {
                     ];
 
                     let swipeBtnsLeft = [{
-                       text: 'Edit',
-                       backgroundColor: 'orange',
+                       text: 'Done',
+                       backgroundColor: 'green',
                        underlayColor: 'rgba(0, 0, 0, 0.6)',
                        onPress: () => {console.log("editing " + item.name);}
                     }];
