@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, FlatList, TextInput, TouchableOpacity, Image, Animated, Dimensions} from 'react-native';
-import {ListItem, Button} from 'react-native-elements';
+import {Button, Avatar} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
 import Swiper from 'react-native-swiper';
 import Swipeout from 'react-native-swipeout';
+import {Font} from 'expo';
 
 require('datejs');
 
@@ -32,7 +34,7 @@ export default class App extends Component {
                     {
                         name : "TODO",
                         priority : 1,
-                        category: 2,
+                        category: 0,
                     },
                     {
                         name: "IMPORTANT",
@@ -48,15 +50,28 @@ export default class App extends Component {
                 curList: [],
                 currentCategory: 0,
             },
-
+            fontLoaded : false,
             placeholder : "Input Task Here",
             inputVisible: false,
         }
+
 
         this.state.todo.curList = this.state.todo.list.filter(el => el.category === 0)
 
         this.deleteTask = this.deleteTask.bind(this);
         this.addTask = this.addTask.bind(this);
+    }
+
+    async componentDidMount() {
+        await Font.loadAsync({
+            'georgia': require('./src/assets/fonts/Georgia.ttf'),
+            'regular': require('./src/assets/fonts/Montserrat-Regular.ttf'),
+            'light': require('./src/assets/fonts/Montserrat-Light.ttf'),
+            'bold': require('./src/assets/fonts/Montserrat-Bold.ttf'),
+        });
+        console.log("FONT LOADED");
+        this.setState({fontLoaded: true });
+        console.log(this.state.fontLoaded);
     }
 
     addTask(task) {
@@ -107,44 +122,38 @@ export default class App extends Component {
     }
 
     render() {
+        /*DATE JS TESTING
         let d1 = new Date(Date.parse('tomorrow 8am'));
         d1.setMinutes(d1.getMinutes() - d1.getTimezoneOffset())
         console.log(d1);
         console.log(d1.getTimezone());
+        */
+
+        console.log(this.state.fontLoaded);
 
         return (
-            <View style={styles.container}>
+            <View style = {styles.container}>
+                {this.state.fontLoaded ?
+                    <View>
+                        <Categories
+                            changeCategoryView={this.changeCategoryView.bind(this)}
+                            categories={this.state.todo.categories}
 
-                <Categories
-                    changeCategoryView = {this.changeCategoryView.bind(this)}
-                    categories = {this.state.todo.categories}
+                        />
 
-                />
-                {/*<View style={{height:60, width: SCREEN_WIDTH, marginTop: 20}}>
-                    <ScrollView
-                        style={{flex: 1}}
-                        horizontal
-                        showsHorizontalScrollIndicator={true}
-                    >
-                        <View style={{ marginLeft: 40, marginRight: 10}}>
-                            <View style={{flex: 1, flexDirection: 'row'}}>
-                                <CustomButton title="Philosophy" selected={true} />
-                                <CustomButton title="Sport" />
-                                <CustomButton title="Swimming" selected={true} />
-                                <CustomButton title="Religion" />
-                            </View>
-                        </View>
-                    </ScrollView>
-                </View>*/}
+                        <TaskList deleteTask={this.deleteTask} list={this.state.todo.curList}/>
 
-                <TaskList deleteTask= {this.deleteTask} list = {this.state.todo.curList}/>
-                <Fade
-                    visible = {this.state.inputVisible}
-                    style={styles.inputTextStyleFade}
-                >
-                    <InputTask addTask={this.addTask}/>
-                </Fade>
-                <AddTaskButton changeInputVisible={this.changeInputVisible.bind(this)}/>
+                        <Fade
+                            visible={this.state.inputVisible}
+                            style={styles.inputTextStyleFade}
+                        >
+                            <InputTask addTask={this.addTask}/>
+                        </Fade>
+
+                        <AddTaskButton changeInputVisible={this.changeInputVisible.bind(this)}/>
+                    </View> :
+                <Text>Loading...</Text>
+            }
             </View>
         );
     }
@@ -176,39 +185,6 @@ class Categories extends Component {
     }
 }
 
-class CustomButton extends Component {
-    constructor() {
-        super();
-
-        this.state = {
-            selected: false
-        };
-    }
-
-    componentDidMount() {
-        const { selected } = this.props;
-
-        this.setState({
-            selected
-        });
-    }
-
-    render() {
-        const { title } = this.props;
-        const { selected } = this.state;
-
-        return (
-            <Button
-                title={title}
-                titleStyle={{ fontSize: 15, color: 'white', fontFamily: 'regular' }}
-                buttonStyle={selected ? { backgroundColor: 'rgba(213, 100, 140, 1)', borderRadius: 100, width: 127 } : { borderWidth: 1, borderColor: 'white', borderRadius: 30, width: 127, backgroundColor: 'transparent' }}
-                containerStyle={{ marginRight: 10 }}
-                onPress={() => this.setState({ selected: !selected })}
-            />
-        );
-    }
-}
-
 class AddTaskButton extends Component {
     changeInputVisible() {
         console.log("Change inputVisible");
@@ -225,7 +201,7 @@ class AddTaskButton extends Component {
         >
             <Image
                 style={styles.imageStyle}
-                source={require('./src/assets/plus-button.png')}
+                source={require('./src/assets/images/plus-button.png')}
             />
         </TouchableOpacity>
     }
@@ -271,6 +247,14 @@ class TaskList extends Component {
     deleteTask(id) {
         this.props.deleteTask(id);
     }
+    renderFlag(flag) {
+        return (
+            <View style = {{flexDirection: 'row'}}>
+
+            </View>
+        )
+
+    }
 
     render() {
         let list = this.props.list;
@@ -278,23 +262,31 @@ class TaskList extends Component {
         return (
             <FlatList
                 style = {styles.listStyle}
-                ItemSeparatorComponent={() =>
+                /*ItemSeparatorComponent={() =>
                     <View
                         style={{
                             backgroundColor: 'gray',
                             height: 0.5,
                         }}
                     />
-                }
+                }*/
                 data = {list}
 
                 renderItem={({item}) => {
-                    let swipeBtnsRight = [{
-                        text: 'Delete',
-                        backgroundColor: 'red',
-                        underlayColor: 'rgba(0, 0, 0, 0.6)',
-                        onPress: () => { this.deleteTask(item) }
-                    }];
+                    let swipeBtnsRight = [
+                        {
+                            text: 'Edit',
+                            backgroundColor: 'orange',
+                            underlayColor: 'rgba(0, 0, 0, 0.6)',
+                            onPress: () => {console.log("editing " + item.name);}
+                        },
+                        {
+                            text: 'Delete',
+                            backgroundColor: 'red',
+                            underlayColor: 'rgba(0, 0, 0, 0.6)',
+                            onPress: () => { this.deleteTask(item) }
+                        },
+                    ];
 
                     let swipeBtnsLeft = [{
                        text: 'Edit',
@@ -304,70 +296,49 @@ class TaskList extends Component {
                     }];
 
                     return (
-                        <Swipeout right={swipeBtnsRight}
-                                  left = {swipeBtnsLeft}
-                                  autoClose={true}
-                                  backgroundColor= 'transparent'
+                        <View style={{height: 60, marginHorizontal: 20, marginTop: 10, backgroundColor: 'white', borderRadius: 5, alignItems: 'center', flexDirection: 'row'}}>
+
+                            <Swipeout right={swipeBtnsRight}
+                                    left = {swipeBtnsLeft}
+                                    autoClose={true}
+                                    backgroundColor= 'transparent'
+                                    //backgroundColor = '#FF0000'
+                                      style = {{width: '100%', height: '100%'}}
+                                    //style={{height: 60, backgroundColor: 'white', borderRadius: 5, alignItems: 'center', flexDirection: 'row'}}>
                         >
-                            <ListItem
-                                title={item.name}
-                                subtitle="May 15, 2018"
-                                hideChevron={true}
-                            />
-
+                            <View style = {{height: '100%'}}>
+                                <View style={{flex: 2, flexDirection: 'row', alignItems: 'center'}}>
+                                    <Text style={{fontFamily: 'regular', fontSize: 15, marginLeft: 15, color: 'gray'}}>
+                                        {item.name}
+                                    </Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', marginRight: 10 }}>
+                                    <View style={{ backgroundColor: 'rgba(220,230,218,1)', width: 70, height: 28, borderRadius: 5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', marginLeft: 10}}>
+                                        <Icon
+                                            name='md-arrow-dropup'
+                                            color='green'
+                                            size={25}
+                                        />
+                                        <Text style={{color: 'green', fontFamily: 'regular', fontSize: 13, marginLeft: 5}}>200</Text>
+                                    </View>
+                                    <View style={{ backgroundColor: 'rgba(222,222,222,1)', width: 35, height: 28, borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginHorizontal: 10}}>
+                                        <Icon
+                                            name='md-person-add'
+                                            color='gray'
+                                            size={20}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
                         </Swipeout>
-                )}}
-
+                        </View>
+                    )
+                }}
                 keyExtractor={(item, index) => index.toString()}
             />
         );
     }
 }
-
-/*class InputTask extends Component {
-    constructor() {
-        super();
-        this.state = {
-            text : "",
-            inputVisible: false,
-        }
-    }
-    addTask(task) {
-        this.props.addTask(task);
-    }
-    changeInputVisible() {
-        this.state.inputVisible = !this.state.inputVisible;
-        console.log("hello"+this.state.inputVisible);
-    }
-
-    render() {
-        return  (
-            <View style = {styles.inputContainer}>
-                {
-                    this.state.inputVisible ? <TextInput
-                        style={styles.inputTextStyle}
-                        onChangeText={(text) => this.setState({text})}
-                        placeholder={this.props.placeholder}
-                        value={this.state.text}
-                    /> : null
-                }
-
-                <TouchableOpacity
-                    style = {styles.buttonStyle}
-                    onPress={this.changeInputVisible()}
-                    title="Add Task"
-                    color="#6395d1"
-                    accessibilityLabel="Add Task"
-                >
-                <Image
-                    style={styles.imageStyle}
-                    source={require('./src/assets/plus-button.png')}
-                />
-                </TouchableOpacity>
-            </View>
-        )
-    }
-}*/
 
 const styles = StyleSheet.create({
     container: {
@@ -399,7 +370,7 @@ const styles = StyleSheet.create({
     },
     listStyle: {
         alignSelf: 'stretch',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#FAFAFA',
         paddingVertical: 8
     },
     buttonStyle: {
