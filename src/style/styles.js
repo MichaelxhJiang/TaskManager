@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#eeeeee',
+        backgroundColor: '#000',
         alignItems: 'flex-start',
         flexDirection: 'column',
     },
@@ -13,24 +13,15 @@ export default StyleSheet.create({
         marginLeft: 20,
         marginTop: 20,
     },
-    inputTextStyle: {
+    editorFade: {
         position: 'absolute',
-        height: 40,
-        width: '80%',
-        top: 40,
-        alignSelf:'center',
-        backgroundColor: '#AAA',
-    },
-    inputTextStyleFade: {
-        position: 'absolute',
-        height: 40,
-        width: '80%',
+        width: 250,
+        height: 400,
         top: 40,
         alignSelf:'center',
     },
     listStyle: {
         alignSelf: 'stretch',
-        backgroundColor: '#EAEAEA',
         paddingVertical: 8
     },
     buttonStyle: {
@@ -40,11 +31,10 @@ export default StyleSheet.create({
         //backgroundColor: '#AAA',
     },
     imageStyle: {
-        width: 80,
-        height: 80
+        width: 60,
+        height: 60
     },
     category: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#9DD6EB'

@@ -20,6 +20,7 @@ export default class Fade extends Component {
         Animated.timing(this._visibility, {
             toValue: nextProps.visible ? 1 : 0,
             duration: 200,
+            useNativeDriver: true
         }).start(() => {
             this.setState({ visible: nextProps.visible });
         });
@@ -33,14 +34,6 @@ export default class Fade extends Component {
                 inputRange: [0, 1],
                 outputRange: [0, 1],
             }),
-            transform: [
-                {
-                    scale: this._visibility.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [1.1, 1],
-                    }),
-                },
-            ],
         };
 
         const combinedStyle = [containerStyle, style];

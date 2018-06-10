@@ -32,9 +32,49 @@ export default class App extends Component {
                         title: "Lifestyle",
                         subtitle: "",
                         css: styles.category,
+                    },
+                    {
+                        title: "Lifestyle",
+                        subtitle: "",
+                        css: styles.category,
                     }
                 ],
                 list : [
+                    {
+                        name : "Meeting tomorrow",
+                        date : "June 1, 2018",
+                        priority : 1,
+                        category: 0,
+                        done : false,
+                    },
+                    {
+                        name : "Hello World",
+                        date : "June 1, 2018",
+                        priority : 1,
+                        category: 0,
+                        done : false,
+                    },
+                    {
+                        name : "TODO",
+                        date : "June 1, 2018",
+                        priority : 1,
+                        category: 0,
+                        done : false,
+                    },
+                    {
+                        name : "testing",
+                        date : "June 1, 2018",
+                        priority : 1,
+                        category: 0,
+                        done : false,
+                    },
+                    {
+                        name : "TODO",
+                        date : "June 1, 2018",
+                        priority : 1,
+                        category: 0,
+                        done : false,
+                    },
                     {
                         name : "TODO",
                         date : "June 1, 2018",
@@ -53,7 +93,7 @@ export default class App extends Component {
                         name:"Hello",
                         date : "June 1, 2018",
                         priority: 3,
-                        category: 1,
+                        category: 2,
                         done : false,
                     },
                 ],
@@ -70,6 +110,7 @@ export default class App extends Component {
             fontLoaded : false,
             placeholder : "Input Task Here",
             inputVisible: false,
+            swipeableToggle: false,
         }
 
         this.state.todo.curList = this.state.todo.list.filter(el => el.category === 0)
@@ -84,6 +125,7 @@ export default class App extends Component {
             'regular': require('./src/assets/fonts/Montserrat-Regular.ttf'),
             'light': require('./src/assets/fonts/Montserrat-Light.ttf'),
             'bold': require('./src/assets/fonts/Montserrat-Bold.ttf'),
+            'Arial': require('./src/assets/fonts/Arial.ttf')
         });
         console.log("FONT LOADED");
         this.setState({fontLoaded: true });
@@ -125,7 +167,7 @@ export default class App extends Component {
     changeCategoryView(index) {
         let newCurList;
         newCurList = this.state.todo.list.filter(el => el.category === index);
-
+        this.setState({swipeableToggle: !this.state.swipeableToggle});
         this.setState(({todo}) =>
             ({todo: {
                     ...todo,
@@ -166,13 +208,18 @@ export default class App extends Component {
 
                         />
 
-                        <TaskList deleteTask={this.deleteTask} list={this.state.todo.curList} toggleTaskDone={this.toggleTaskDone.bind(this)}/>
+                        <TaskList
+                            deleteTask={this.deleteTask}
+                            list={this.state.todo.curList}
+                            toggleTaskDone={this.toggleTaskDone.bind(this)}
+                            swipeableToggle = {this.state.swipeableToggle}
+                        />
 
                         <Fade
-                            visible={this.state.inputVisible}
-                            style={styles.inputTextStyleFade}
+                            visible = {this.state.inputVisible}
+                            style = {styles.editorFade}
                         >
-                            <Editor addTask={this.addTask}/>
+                            <Editor addTask={this.addTask} changeInputVisible = {this.changeInputVisible.bind(this)} categories = {this.state.todo.categories}/>
                         </Fade>
 
                         <AddTaskButton changeInputVisible={this.changeInputVisible.bind(this)}/>

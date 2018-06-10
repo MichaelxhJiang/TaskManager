@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import  { View, Text, TouchableOpacity, } from 'react-native';
+import  { View, Text, TouchableOpacity, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import styles from '../style/styles.js';
 import Swipeable from 'react-native-swipeable'
@@ -8,7 +8,8 @@ import Swipeable from 'react-native-swipeable'
 export default class TaskItem extends Component {
     state = {
         leftActionActivated: false,
-        toggle: false
+        toggle: false,
+        swipeableToggle: false
     };
 
     isSwiping() {
@@ -19,18 +20,35 @@ export default class TaskItem extends Component {
         console.log("Swipe Release");
         this.props.notSwiping();
     }
+    deleteTask(el) {
+        this.swipeable.recenter();
+        this.props.deleteTask(el);
+    }
+    editTask() {
+        //TODO
+    }
 
     render() {
         const {leftActionActivated, toggle} = this.state;
 
         return (
             <Swipeable
-                leftActionActivationDistance={150}
+                onRef={ref => this.swipeable = ref}
+                leftActionActivationDistance={200}
                 leftContent={(
-                    <View style={[styles.leftSwipeItem, {backgroundColor: leftActionActivated ? 'lightgoldenrodyellow' : 'steelblue'}]}>
+                    <View style={[styles.leftSwipeItem, {backgroundColor: 'green'}]}>
                         {leftActionActivated ?
-                            <Text>Done!</Text> :
-                            <Text>Mark as Done</Text>}
+                            <Icon
+                                name='md-checkmark-circle-outline'
+                                color='white'
+                                size={40}
+                            /> :
+                            <Image
+                                style={{height: 50, width: 100}}
+                                source={require('../assets/images/swipeArrow.png')}
+                                resizeMode="contain"
+                            />
+                        }
                     </View>
                 )}
                 onLeftActionActivate={() => this.setState({leftActionActivated: true})}
@@ -38,19 +56,25 @@ export default class TaskItem extends Component {
                 onLeftActionComplete={() => this.props.toggleTaskDone()/*this.setState({toggle: !toggle})*/}
 
                 rightButtons={[
-                    <TouchableOpacity style={[styles.rightSwipeItem, {backgroundColor: 'orange'}]}>
+                    <TouchableOpacity
+                        style={[styles.rightSwipeItem, {backgroundColor: 'orange'}]}
+                        onPress = {this.editTask()}
+                    >
                         <Text>Edit</Text>
                     </TouchableOpacity>,
-                    <TouchableOpacity style={[styles.rightSwipeItem, {backgroundColor: 'red'}]}>
+                    <TouchableOpacity
+                        style={[styles.rightSwipeItem, {backgroundColor: 'red'}]}
+                        onPress = {this.deleteTask.bind(this, this.props.item)}
+                    >
                         <Text>Delete</Text>
                     </TouchableOpacity>
                 ]}
                 onRightButtonsOpenRelease={this.props.itemProps.onOpen}
                 onRightButtonsCloseRelease={this.props.itemProps.onClose}
             >
-                <View style={[styles.listItem, {backgroundColor: this.props.item.done ? 'thistle' : 'darkseagreen'}]}>
+                <View style={[styles.listItem, {backgroundColor: '#333'}]}>
                     <View style={{flex: 2, flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center'}}>
-                        <Text style={{fontFamily: 'regular', fontSize: 18, marginLeft: 15, color: 'black'}}>
+                        <Text style={{fontFamily: 'regular', fontSize: 18, marginLeft: 15, color: this.props.item.done ? 'gray' : 'white', textDecorationLine: this.props.item.done ? 'line-through' : undefined}}>
                             {this.props.item.name}
                         </Text>
                         <Text style={{fontSize: 15, marginLeft: 15, color: 'gray'}}>

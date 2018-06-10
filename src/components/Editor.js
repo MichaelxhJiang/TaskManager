@@ -14,16 +14,26 @@ export default class Editor extends Component {
         let task = {
             name: name,
             priority: 4,
+            category: 0,
         };
         this.props.addTask(task);
+        this.props.changeInputVisible();
     }
 
     render() {
         console.log("INPUT RENDER");
         return (
-            <View>
+            <View
+                style={{justifyContent:'center', alignSelf:'center', flex:1, backgroundColor: '#444', width: 250, height: 400, borderRadius:14}}
+            >
                 <TextInput
-                    style={styles.inputTextStyle}
+                    style={{
+                        position: 'absolute',
+                        height: 40,
+                        width: 200,
+                        top: 40,
+                        alignSelf:'center',
+                    }}
                     onChangeText={(text) => this.setState({text})}
                     placeholder={this.props.placeholder}
                     value={this.state.text}
@@ -31,7 +41,9 @@ export default class Editor extends Component {
                 />
                 <Button
                     title="Add Task"
-                    onPress= {this.addTask.bind(this, this.state.text)}
+                    onPress= {
+                        this.addTask.bind(this, this.state.text)
+                    }
                 />
             </View>
         )
