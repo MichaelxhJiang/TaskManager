@@ -108,23 +108,6 @@ export default class TaskItem extends Component {
                             {dateFormat}
                         </Text>
                     </View>
-                    {/*<View style={{ flexDirection: 'row', justifyContent: 'center', marginRight: 10 }}>
-                        <View style={{ backgroundColor: 'rgba(220,230,218,1)', width: 70, height: 28, borderRadius: 5, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', marginLeft: 10}}>
-                            <Icon
-                                name='md-arrow-dropup'
-                                color='green'
-                                size={25}
-                            />
-                            <Text style={{color: 'green', fontFamily: 'regular', fontSize: 13, marginLeft: 5}}>200</Text>
-                        </View>
-                        <View style={{ backgroundColor: 'rgba(222,222,222,1)', width: 35, height: 28, borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginHorizontal: 10}}>
-                            <Icon
-                                name='md-person-add'
-                                color='gray'
-                                size={20}
-                            />
-                        </View>
-                    </View>*/}
                 </View>
             </Swipeable>
         );

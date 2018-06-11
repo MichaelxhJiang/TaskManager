@@ -5,14 +5,6 @@ export default class CategoryButton extends Component {
         this.props.selectCategory(title, id);
     }
 
-    /*componentDidUpdate() {
-        if (this.props.title !== this.props.currentCategory) {
-            this.setState({selected: false});
-        } else {
-            this.setState({selected: true})
-        }
-    }*/
-
     render() {
         const { title } = this.props;
         const { index } = this.props;

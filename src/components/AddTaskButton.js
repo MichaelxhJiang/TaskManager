@@ -17,10 +17,6 @@ export default class AddTaskButton extends Component {
             color="#6395d1"
             accessibilityLabel="Add Task"
         >
-            {/*<Image
-                style={styles.imageStyle}
-                source={require('../assets/images/plus-button.png')}
-            />*/}
             <Icon
                 name='md-add-circle'
                 color='#005AAA'

@@ -212,14 +212,6 @@ export default class App extends Component {
     }
 
     render() {
-        /*DATE JS TESTING
-        let d1 = new Date(Date.parse('tomodrrow 8am'));
-        console.log(Date.parse('tomodrrow 8am'));
-        d1.setMinutes(d1.getMinutes() - d1.getTimezoneOffset())
-        console.log(d1);
-        console.log(d1.getTimezone());*/
-
-
         return (
             <View style = {styles.container}>
                 {this.state.fontLoaded ?
