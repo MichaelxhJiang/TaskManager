@@ -1,33 +1,30 @@
 import React, {Component} from "react";
 import {Button} from 'react-native-elements';
 export default class CategoryButton extends Component {
-    constructor() {
-        super();
-
-        this.state = {
-            selected: false
-        };
+    selectCategory(title, id) {
+        this.props.selectCategory(title, id);
     }
 
-    componentDidMount() {
-        const { selected } = this.props;
-
-        this.setState({
-            selected
-        });
-    }
+    /*componentDidUpdate() {
+        if (this.props.title !== this.props.currentCategory) {
+            this.setState({selected: false});
+        } else {
+            this.setState({selected: true})
+        }
+    }*/
 
     render() {
         const { title } = this.props;
-        const { selected } = this.state;
+        const { index } = this.props;
+        const { selected } = this.props;
 
         return (
             <Button
                 title={title}
                 titleStyle={{ fontSize: 15, color: 'white', fontFamily: 'regular' }}
-                buttonStyle={selected ? { backgroundColor: 'rgba(213, 100, 140, 1)', borderRadius: 100, width: 127 } : { borderWidth: 1, borderColor: 'white', borderRadius: 30, width: 127, backgroundColor: 'transparent' }}
-                containerStyle={{ marginRight: 10 }}
-                onPress={() => this.setState({ selected: !selected })}
+                buttonStyle={selected ? { backgroundColor: '#005AAA', borderRadius: 100, width: 125 } : { borderWidth: 1, borderColor: 'white', borderRadius: 30, width: 125, backgroundColor: 'transparent' }}
+                containerStyle={{ marginRight: 10, marginTop: 10}}
+                onPress={this.selectCategory.bind(this, title, index)}
             />
         );
     }

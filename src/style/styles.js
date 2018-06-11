@@ -15,7 +15,7 @@ export default StyleSheet.create({
     },
     editorFade: {
         position: 'absolute',
-        width: 250,
+        width: 300,
         height: 400,
         top: 40,
         alignSelf:'center',
@@ -26,7 +26,7 @@ export default StyleSheet.create({
     },
     buttonStyle: {
         position: 'absolute',
-        bottom: '5%',
+        bottom: '2%',
         right: '2%',
         //backgroundColor: '#AAA',
     },
@@ -51,17 +51,26 @@ export default StyleSheet.create({
     rightSwipeItem: {
         flex: 1,
         justifyContent: 'center',
-        paddingLeft: 20
+        paddingLeft: 20,
+        borderRadius:10
     },
     leftSwipeItem: {
         flex: 1,
         alignItems: 'flex-end',
         justifyContent: 'center',
-        paddingRight: 20
+        paddingRight: 20,
+        borderRadius:10
     },
     listItem: {
         height: 75,
         alignItems: 'flex-start',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        borderRadius:10
     },
+    editorTitle: {
+        fontSize: 20,
+        fontFamily: 'bold',
+        color: 'white',
+        alignSelf: 'center'
+    }
 });

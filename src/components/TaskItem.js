@@ -9,7 +9,30 @@ export default class TaskItem extends Component {
     state = {
         leftActionActivated: false,
         toggle: false,
-        swipeableToggle: false
+        swipeableToggle: false,
+        weekday : [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Sunday",
+        ],
+        month: [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ]
     };
 
     isSwiping() {
@@ -22,6 +45,7 @@ export default class TaskItem extends Component {
     }
     deleteTask(el) {
         this.swipeable.recenter();
+        this.props.itemProps.onClose();
         this.props.deleteTask(el);
     }
     editTask() {
@@ -30,6 +54,9 @@ export default class TaskItem extends Component {
 
     render() {
         const {leftActionActivated, toggle} = this.state;
+        const {date} = this.props.item;
+
+        let dateFormat = date ? this.state.weekday[date.getDay()] + ", " + this.state.month[date.getMonth()] + " " + date.getDate() + ", " + date.getFullYear() : "";
 
         return (
             <Swipeable
@@ -78,7 +105,7 @@ export default class TaskItem extends Component {
                             {this.props.item.name}
                         </Text>
                         <Text style={{fontSize: 15, marginLeft: 15, color: 'gray'}}>
-                            {this.props.item.date}
+                            {dateFormat}
                         </Text>
                     </View>
                     {/*<View style={{ flexDirection: 'row', justifyContent: 'center', marginRight: 10 }}>

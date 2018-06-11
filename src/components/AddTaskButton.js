@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import  { TouchableOpacity, Image} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import styles from '../style/styles.js';
 
 export default class AddTaskButton extends Component {
@@ -16,9 +17,14 @@ export default class AddTaskButton extends Component {
             color="#6395d1"
             accessibilityLabel="Add Task"
         >
-            <Image
+            {/*<Image
                 style={styles.imageStyle}
                 source={require('../assets/images/plus-button.png')}
+            />*/}
+            <Icon
+                name='md-add-circle'
+                color='#005AAA'
+                size={80}
             />
         </TouchableOpacity>
     }

@@ -10,7 +10,7 @@ export default class Categories extends Component {
     }
     render() {
         return (
-            <View style={{height:'40%'}}>
+            <View style={{height:'40%', borderRadius:10}}>
                     <Swiper
                         onIndexChanged={(index) => this.changeCategoryView(index)}
                         loop={false}
@@ -19,13 +19,14 @@ export default class Categories extends Component {
                             this.props.categories.map((item, index) => {
                                 return (
                                     <View style={item.css} key={index}>
-                                        <ImageBackground source = {require('../assets/images/bg1.jpg')}
+                                        <ImageBackground source = {require('../assets/images/bg2.jpg')}
                                                          style = {{
                                                              height:'100%',
                                                              width:'100%',
                                                              alignItems: 'center',
                                                              justifyContent: 'center',
                                                              flexDirection: 'column',
+                                                             borderRadius:10,
                                                          }}>
                                             <Text style={styles.categoryTitle}>{item.title}</Text>
                                             <Text style = {styles.categorySubTitle}>{item.subtitle}</Text>

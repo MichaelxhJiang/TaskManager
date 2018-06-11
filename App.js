@@ -6,7 +6,7 @@ import {Font} from 'expo';
 import TaskList from './src/components/TaskList.js';
 import Categories from './src/components/Categories.js';
 import AddTaskButton from './src/components/AddTaskButton.js';
-import Editor from './src/components/Editor.js';
+import AddTask from './src/components/AddTask.js';
 import Fade from './src/components/Fade.js';
 import styles from './src/style/styles.js';
 
@@ -34,66 +34,87 @@ export default class App extends Component {
                         css: styles.category,
                     },
                     {
-                        title: "Lifestyle",
-                        subtitle: "",
+                        title: "Miscellaneous",
+                        subtitle: "The odd-ball tasks",
                         css: styles.category,
                     }
                 ],
                 list : [
                     {
-                        name : "Meeting tomorrow",
-                        date : "June 1, 2018",
+                        name : "Robotics Meeting Tomorrow",
+                        date : new Date(),
                         priority : 1,
                         category: 0,
                         done : false,
                     },
                     {
-                        name : "Hello World",
-                        date : "June 1, 2018",
+                        name : "Computer Science Project",
+                        date : new Date(),
                         priority : 1,
                         category: 0,
                         done : false,
                     },
                     {
-                        name : "TODO",
-                        date : "June 1, 2018",
+                        name : "Physics Homework",
+                        date : new Date(),
                         priority : 1,
                         category: 0,
                         done : false,
                     },
                     {
-                        name : "testing",
-                        date : "June 1, 2018",
-                        priority : 1,
-                        category: 0,
-                        done : false,
-                    },
-                    {
-                        name : "TODO",
-                        date : "June 1, 2018",
+                        name : "Chemistry Test on Friday",
+                        date : new Date(Date.parse("next friday")),
                         priority : 1,
                         category: 0,
                         done : false,
                     },
                     {
                         name : "TODO",
-                        date : "June 1, 2018",
+                        date : new Date(),
+                        priority : 1,
+                        category: 0,
+                        done : false,
+                    },
+                    {
+                        name : "TODO",
+                        date : new Date(),
                         priority : 1,
                         category: 0,
                         done : false,
                     },
                     {
                         name: "IMPORTANT",
-                        date : "June 1, 2018",
+                        date : new Date(),
                         priority : 2,
                         category: 1,
                         done : false,
                     },
                     {
-                        name:"Hello",
-                        date : "June 1, 2018",
+                        name:"Run 5k",
+                        date : new Date(),
                         priority: 3,
                         category: 2,
+                        done : false,
+                    },
+                    {
+                        name:"Dinner tomorrow",
+                        date : new Date(Date.parse("tomorrow")),
+                        priority: 3,
+                        category: 2,
+                        done : false,
+                    },
+                    {
+                        name:"Go downtown on Friday",
+                        date : new Date(Date.parse("next friday")),
+                        priority: 3,
+                        category: 2,
+                        done : false,
+                    },
+                    {
+                        name:"Do the laundry",
+                        date : new Date(Date.parse("next friday")),
+                        priority: 3,
+                        category: 3,
                         done : false,
                     },
                 ],
@@ -192,11 +213,12 @@ export default class App extends Component {
 
     render() {
         /*DATE JS TESTING
-        let d1 = new Date(Date.parse('tomorrow 8am'));
+        let d1 = new Date(Date.parse('tomodrrow 8am'));
+        console.log(Date.parse('tomodrrow 8am'));
         d1.setMinutes(d1.getMinutes() - d1.getTimezoneOffset())
         console.log(d1);
-        console.log(d1.getTimezone());
-        */
+        console.log(d1.getTimezone());*/
+
 
         return (
             <View style = {styles.container}>
@@ -219,7 +241,7 @@ export default class App extends Component {
                             visible = {this.state.inputVisible}
                             style = {styles.editorFade}
                         >
-                            <Editor addTask={this.addTask} changeInputVisible = {this.changeInputVisible.bind(this)} categories = {this.state.todo.categories}/>
+                            <AddTask addTask={this.addTask} changeInputVisible = {this.changeInputVisible.bind(this)} categories = {this.state.todo.categories}/>
                         </Fade>
 
                         <AddTaskButton changeInputVisible={this.changeInputVisible.bind(this)}/>
