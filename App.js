@@ -9,6 +9,10 @@ import AddTaskButton from './src/components/AddTaskButton.js';
 import AddTask from './src/components/AddTask.js';
 import Fade from './src/components/Fade.js';
 import styles from './src/style/styles.js';
+import MenuButton from "./src/components/MenuButton.js";
+import SideMenu from './src/components/SideMenu.js'
+import Drawer from "react-native-drawer";
+import AddCategory from './src/components/AddCategory.js';
 
 require('datejs');
 
@@ -22,21 +26,25 @@ export default class App extends Component {
                         title: "School",
                         subtitle: "Homework, Tests, Assignments",
                         css: styles.category,
+                        bg: require('./src/assets/images/school.jpg')
                     },
                     {
                         title: "Shopping List",
                         subtitle: "",
                         css: styles.category,
+                        bg: require('./src/assets/images/bg2.jpg')
                     },
                     {
                         title: "Lifestyle",
                         subtitle: "",
                         css: styles.category,
+                        bg: require('./src/assets/images/bg1.jpg')
                     },
                     {
                         title: "Miscellaneous",
                         subtitle: "The odd-ball tasks",
                         css: styles.category,
+                        bg: require('./src/assets/images/bg3.jpg')
                     }
                 ],
                 list : [
@@ -131,7 +139,10 @@ export default class App extends Component {
             fontLoaded : false,
             placeholder : "Input Task Here",
             inputVisible: false,
+            inputVisibleCat: false,
             swipeableToggle: false,
+            menuActive: false,
+            menuCategoryIndex: 0,
         }
 
         this.state.todo.curList = this.state.todo.list.filter(el => el.category === 0)
@@ -154,16 +165,25 @@ export default class App extends Component {
     }
 
     addTask(task) {
-        console.log("Add Task Parent");
-        console.log(task);
         let list = this.state.todo.list;
         let newList = [task].concat(list);
-        console.log(newList);
         this.setState(({todo}) =>
             ({todo: {
                 ...todo,
                 list: newList,
                 curList: newList.filter(el => el.category === this.state.todo.currentCategory)
+            }})
+        );
+    }
+
+    addCategory(category) {
+        let cat = this.state.todo.categories;
+        let newCat = cat.concat(category);
+        console.log(newCat);
+        this.setState(({todo}) =>
+            ({todo: {
+                    ...todo,
+                    categories: newCat
             }})
         );
     }
@@ -185,6 +205,10 @@ export default class App extends Component {
         this.setState({inputVisible: !this.state.inputVisible});
     }
 
+    changeInputVisibleCat() {
+        this.setState({inputVisibleCat: !this.state.inputVisibleCat});
+    }
+
     changeCategoryView(index) {
         let newCurList;
         newCurList = this.state.todo.list.filter(el => el.category === index);
@@ -196,6 +220,10 @@ export default class App extends Component {
                     currentCategory: index,
                 }})
         );
+    }
+
+    menuSelectCategory(index) {
+        this.setState({menuCategoryIndex: index});
     }
 
     toggleTaskDone(el) {
@@ -211,16 +239,52 @@ export default class App extends Component {
         );
     }
 
+    toggleMenu() {
+        this.setState({menuActive: true});
+    }
+
+    closeDrawer() {
+        console.log("close drawer");
+        this.setState({menuActive: false});
+    }
+
     render() {
         return (
             <View style = {styles.container}>
                 {this.state.fontLoaded ?
                     <View>
-                        <Categories
-                            changeCategoryView={this.changeCategoryView.bind(this)}
-                            categories={this.state.todo.categories}
+                        <View style={{height:'40%'}}>
+                            <Drawer
+                                open = {this.state.menuActive}
+                                type = 'static'
+                                tapToClose = {true}
+                                openDrawerOffset = {0.3}
+                                closedDrawerOffset = {0}
+                                content={
+                                    <SideMenu
+                                        categories = {this.state.todo.categories}
+                                        menuSelectCategory = {this.menuSelectCategory.bind(this)}
+                                        active = {this.state.menuActive}
+                                        changeInputVisibleCat = {this.changeInputVisibleCat.bind(this)}
+                                    />
+                                }
+                                onClose = {this.closeDrawer.bind(this)}
+                            >
+                                <View style = {{flex:1}}>
+                                    <Categories
+                                        changeCategoryView={this.changeCategoryView.bind(this)}
+                                        categories={this.state.todo.categories}
+                                        index = {this.state.menuCategoryIndex}
+                                    />
 
-                        />
+                                    <MenuButton
+                                        toggleMenu = {this.toggleMenu.bind(this)}
+                                    />
+                                </View>
+                            </Drawer>
+                        </View>
+
+
 
                         <TaskList
                             deleteTask={this.deleteTask}
@@ -236,8 +300,17 @@ export default class App extends Component {
                             <AddTask addTask={this.addTask} changeInputVisible = {this.changeInputVisible.bind(this)} categories = {this.state.todo.categories}/>
                         </Fade>
 
+                        <Fade
+                            visible = {this.state.inputVisibleCat}
+                            style = {styles.editorFade}
+                        >
+                            <AddCategory addCategory={this.addCategory.bind(this)} changeInputVisibleCat = {this.changeInputVisibleCat.bind(this)} categories = {this.state.todo.categories}/>
+                        </Fade>
+
                         <AddTaskButton changeInputVisible={this.changeInputVisible.bind(this)}/>
-                    </View> :
+
+                    </View>
+                     :
                 <Text>Loading...</Text>
             }
             </View>
